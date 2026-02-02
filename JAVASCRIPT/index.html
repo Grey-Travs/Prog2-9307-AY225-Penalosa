@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Records Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>📚 Student Records Manager</h1>
+        <p id="record-count">Total Records: 0</p>
+    </header>
+
+    <!-- Input Form Section -->
+    <section class="input-panel">
+        <div class="form-group">
+            <label for="student-id">Student ID:</label>
+            <input type="text" id="student-id" placeholder="e.g., 2024006" maxlength="10">
+        </div>
+        <div class="form-group">
+            <label for="student-name">Name:</label>
+            <input type="text" id="student-name" placeholder="e.g., Sarah Wilson">
+        </div>
+        <div class="form-group">
+            <label for="student-grade">Grade:</label>
+            <input type="number" id="student-grade" placeholder="0-100" min="0" max="100">
+        </div>
+        <button id="add-btn" class="btn btn-add">➕ Add Record</button>
+        <button id="clear-btn" class="btn btn-clear">🔄 Clear Fields</button>
+    </section>
+
+    <!-- Table Section -->
+    <section class="table-container">
+        <table id="records-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Grade</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Rows generated dynamically -->
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Statistics Section (Bonus) -->
+    <section class="stats-panel">
+        <div class="stat-card">
+            <h3>Average Grade</h3>
+            <p id="avg-grade">--</p>
+        </div>
+        <div class="stat-card">
+            <h3>Highest Grade</h3>
+            <p id="max-grade">--</p>
+        </div>
+        <div class="stat-card">
+            <h3>Lowest Grade</h3>
+            <p id="min-grade">--</p>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
