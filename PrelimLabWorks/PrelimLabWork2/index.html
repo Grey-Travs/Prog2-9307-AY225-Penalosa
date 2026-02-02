@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prelim Lab Work 2 - Complete</title>
+    <style>
+        /* --- GLOBAL RESET & BODY --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+            overflow-x: hidden;
+        }
+
+        .container { width: 100%; max-width: 450px; position: relative; z-index: 10; }
+
+        /* --- CARDS (Shared Style) --- */
+        .card { 
+            background: white; 
+            border-radius: 12px; 
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); 
+            padding: 40px; 
+            transition: all 0.3s ease; 
+            display: none; /* Hidden by default */
+        }
+
+        /* Show active card */
+        .card.active { display: block; animation: slideIn 0.5s ease-out; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .shake { animation: shake 0.5s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+
+        /* --- TYPOGRAPHY & FORMS --- */
+        h1, h2 { color: #333; margin-bottom: 20px; text-align: center; }
+        h1 { font-size: 28px; }
+        h2 { font-size: 22px; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #555; font-weight: 600; font-size: 14px; }
+        
+        input[type="text"], input[type="password"] { 
+            width: 100%; padding: 12px 15px; 
+            border: 2px solid #e0e0e0; border-radius: 6px; 
+            font-size: 14px; transition: all 0.3s ease; 
+        }
+        input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+        
+        .form-group.error input { border-color: #e74c3c; background-color: #fef5f5; }
+        .error-message { color: #e74c3c; font-size: 13px; margin-top: 6px; display: none; text-align: center; }
+        .error-message.show { display: block; }
+
+        /* --- BUTTONS --- */
+        button { 
+            width: 100%; padding: 12px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; border: none; border-radius: 6px; 
+            font-size: 16px; font-weight: 600; cursor: pointer; 
+            transition: all 0.3s ease; margin-top: 10px; 
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3); }
+        button:active { transform: translateY(0); }
+
+        .btn-secondary { background: #95a5a6; } /* Grey button */
+        .btn-secondary:hover { background: #7f8c8d; }
+        
+        .btn-danger { background: #e74c3c; background-image: none; } /* Red button */
+        .btn-danger:hover { background: #c0392b; }
+
+        .button-group { display: flex; gap: 10px; margin-top: 20px; }
+        
+        /* --- LINKS --- */
+        .link-text { text-align: center; margin-top: 15px; font-size: 14px; }
+        .link-text a { color: #667eea; text-decoration: none; font-weight: 600; cursor: pointer; }
+        .link-text a:hover { text-decoration: underline; }
+
+        /* --- STUDENT DASHBOARD ELEMENTS --- */
+        .success-icon { 
+            width: 80px; height: 80px; background: #2ecc71; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            margin: 0 auto 20px; font-size: 40px; color: white; 
+            transition: transform 0.3s ease;
+        }
+        /* Hover Effect for Student Dashboard */
+        .card:hover .success-icon { transform: scale(1.1) rotate(10deg); }
+        
+        .timestamp-box { 
+            background: #f8f9fa; border-left: 4px solid #667eea; 
+            padding: 15px; margin: 20px 0; border-radius: 6px; text-align: left; 
+        }
+        .timestamp-value { 
+            color: #333; font-family: 'Courier New', monospace; 
+            font-size: 16px; font-weight: 600; 
+        }
+
+        /* --- ADMIN TABLE STYLES --- */
+        .table-container { max-height: 300px; overflow-y: auto; margin-top: 15px; border: 1px solid #eee; border-radius: 6px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { background: #667eea; color: white; padding: 10px; text-align: left; position: sticky; top: 0; }
+        td { padding: 10px; border-bottom: 1px solid #eee; color: #333; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+
+        /* --- CONFETTI CANVAS --- */
+        #confetti-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; /* Allows clicking through the confetti */
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="container">
+        
+        <div id="view-login" class="card active">
+            <h1>System Login</h1>
+            <form id="loginForm">
+                <div class="form-group" id="loginUserGroup">
+                    <label>Username</label>
+                    <input type="text" id="loginUser" placeholder="Enter username" required>
+                </div>
+                <div class="form-group" id="loginPassGroup">
+                    <label>Password</label>
+                    <input type="password" id="loginPass" placeholder="Enter password" required>
+                </div>
+                <button type="submit">Log In</button>
+                <div id="loginError" class="error-message">Incorrect credentials.</div>
+                
+                <p class="link-text">
+                    New student? <a onclick="switchView('view-signup')">Sign up here</a>
+                </p>
+            </form>
+        </div>
+
+        <div id="view-signup" class="card">
+            <h1>Student Registration</h1>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label>Create Username</label>
+                    <input type="text" id="signUser" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label>Create Password</label>
+                    <input type="password" id="signPass" placeholder="Choose a password" required>
+                </div>
+                <button type="submit">Sign Up</button>
+                
+                <p class="link-text">
+                    Already registered? <a onclick="switchView('view-login')">Back to Login</a>
+                </p>
+            </form>
+        </div>
+
+        <div id="view-student" class="card">
+            <div class="success-icon">✓</div>
+            <h2>Welcome, <span id="studentNameDisplay">Student</span>!</h2>
+            
+            <div class="timestamp-box">
+                <label style="font-size: 12px; color: #888;">LOGIN TIME:</label>
+                <div class="timestamp-value" id="studentTimeDisplay">--:--:--</div>
+            </div>
+
+            <p style="text-align:center; color:#666; font-size:14px;">Your attendance has been recorded.</p>
+
+            <div class="button-group">
+                <button onclick="downloadAttendance()">Download Summary</button>
+                <button class="btn-secondary" onclick="handleLogout()">Logout</button>
+            </div>
+        </div>
+
+        <div id="view-admin" class="card" style="max-width: 500px;">
+            <h2>Admin Panel</h2>
+            <p style="text-align:center; color:#666;">Attendance Transcript</p>
+            
+            <div class="table-container">
+                <table id="adminTable">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Time In</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-danger" onclick="clearAttendanceData()">Clear Data</button>
+                <button class="btn-secondary" onclick="handleLogout()">Logout</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+admin (see record of attendees)
+
+user: admin
+password:1234567
+
+used py -m http.server 8000 to serve
