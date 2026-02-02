@@ -1,3 +1,7 @@
+/* * Project: Student Records Manager 
+ * Author: Travis Penalosa 
+ * Requirement: Prelim Exam 
+ */
 const CSV_DATA = `StudentID,Name,Grade
 2024001,John Doe,85
 2024002,Jane Smith,92
